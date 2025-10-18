@@ -158,7 +158,7 @@ export default function LoginPage() {
             <Button
               size="sm"
               variant="flat"
-              onClick={handleGuestLogin}
+              onPress={handleGuestLogin}
               className={`w-full smooth-transition hover:scale-105 ${
                 userType === 'user'
                   ? 'bg-gradient-to-r from-purple-100 to-pink-100'
