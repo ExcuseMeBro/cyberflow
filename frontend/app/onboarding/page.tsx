@@ -49,8 +49,8 @@ const OnboardingPage = () => {
     },
     {
       id: 3,
-      title: "CBDS Token",
-      subtitle: "Central Bank Digital System",
+      title: "CG Coin",
+      subtitle: "CyberGamer Digital Currency",
       description: "Secure payment system for gaming and earn rewards",
       icon: Coins,
       color: "from-yellow-500 to-orange-500",

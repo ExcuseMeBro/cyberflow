@@ -55,3 +55,17 @@ export interface Schedule {
   scheduledAt: string;
   description?: string;
 }
+
+export interface Cybermahalla {
+  id: number;
+  name: string;
+  logo: string;
+  banner: string;
+  description: string;
+  members: number;
+  isJoined: boolean;
+  categories: string[];
+  activeCompetitions: number;
+  createdAt: string;
+  isOnline?: boolean;
+}

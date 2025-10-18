@@ -1,13 +1,14 @@
 'use client';
 
 import { Card, CardBody, Button, Chip } from '@nextui-org/react';
-import { ArrowLeft, Bell, AlertCircle, CheckCircle, Info, Trash2 } from 'lucide-react';
+import { ArrowLeft, Bell, AlertCircle, CheckCircle, Info, Trash2, Heart, Users, DollarSign } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import BottomNav from '@/components/BottomNav';
 import PageHeader from '@/components/PageHeader';
+import { useAuthStore } from '@/store/authStore';
 
-// Mock notifications data
-const mockNotifications = [
+// Mock notifications for parents
+const mockParentNotifications = [
   {
     id: 1,
     type: 'warning',
@@ -20,7 +21,7 @@ const mockNotifications = [
     id: 2,
     type: 'info',
     title: 'New purchase request',
-    message: 'Test Gamer requested to buy a new game (5,000 CBDS)',
+    message: 'Test Gamer requested to buy a new game (5,000 CG)',
     time: '1 hour ago',
     read: false,
   },
@@ -52,14 +53,85 @@ const mockNotifications = [
     id: 6,
     type: 'success',
     title: 'Reward earned',
-    message: 'Test Gamer earned 500 CBDS tokens for completing weekly goals',
+    message: 'Test Gamer earned 500 CG coins for completing weekly goals',
     time: '2 days ago',
+    read: true,
+  },
+];
+
+// Mock notifications for regular users
+const mockUserNotifications = [
+  {
+    id: 1,
+    type: 'success',
+    title: 'New follower',
+    message: 'ProGamer789 started following you',
+    time: '15 minutes ago',
+    read: false,
+  },
+  {
+    id: 2,
+    type: 'info',
+    title: 'Stream milestone',
+    message: 'Your stream reached 1,000 views!',
+    time: '1 hour ago',
+    read: false,
+  },
+  {
+    id: 3,
+    type: 'success',
+    title: 'Achievement unlocked',
+    message: 'You completed your daily gaming goals',
+    time: '2 hours ago',
+    read: false,
+  },
+  {
+    id: 4,
+    type: 'info',
+    title: 'Club discount available',
+    message: 'Cyber Arena is offering 25% OFF today only',
+    time: '3 hours ago',
+    read: true,
+  },
+  {
+    id: 5,
+    type: 'success',
+    title: 'Tokens received',
+    message: 'You earned 1,000 CG coins from your parent',
+    time: '5 hours ago',
+    read: true,
+  },
+  {
+    id: 6,
+    type: 'info',
+    title: 'Friend request',
+    message: 'PlayerPro123 sent you a friend request',
+    time: '1 day ago',
+    read: true,
+  },
+  {
+    id: 7,
+    type: 'success',
+    title: 'Weekly reward',
+    message: 'You earned 500 CG coins for completing weekly goals',
+    time: '2 days ago',
+    read: true,
+  },
+  {
+    id: 8,
+    type: 'info',
+    title: 'New tournament',
+    message: 'Pro League is hosting a CS:GO tournament this weekend',
+    time: '3 days ago',
     read: true,
   },
 ];
 
 export default function NotificationsPage() {
   const router = useRouter();
+  const { userType } = useAuthStore();
+
+  const mockNotifications = userType === 'parent' ? mockParentNotifications : mockUserNotifications;
 
   const getIcon = (type: string) => {
     switch (type) {

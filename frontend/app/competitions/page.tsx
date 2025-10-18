@@ -108,7 +108,7 @@ export default function CompetitionsPage() {
         </div>
 
         {upcomingCompetitions.map((comp) => (
-          <Card key={comp.id} className="card-hover shadow-md" isPressable>
+          <Card key={comp.id} className="w-full card-hover shadow-md" isPressable>
             <CardBody className="p-4">
               <div className="flex items-start gap-3">
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center flex-shrink-0 shadow-lg">
@@ -158,7 +158,7 @@ export default function CompetitionsPage() {
         {liveCompetitions.map((comp, index) => (
           <Card
             key={comp.id}
-            className="card-hover shadow-md"
+            className="w-full card-hover shadow-md"
             isPressable
             style={{ animationDelay: `${0.05 * index}s` }}
           >
@@ -229,7 +229,7 @@ export default function CompetitionsPage() {
           </Button>
         </div>
 
-        <Card className="shadow-md">
+        <Card className="w-full shadow-md">
           <CardBody className="p-0">
             {leaderboard.map((player, index) => (
               <div
@@ -277,7 +277,7 @@ export default function CompetitionsPage() {
         </Card>
 
         {/* Your Rank */}
-        <Card className="bg-gradient-to-br from-primary-50 to-secondary-50 border-2 border-primary-200 shadow-md">
+        <Card className="w-full bg-gradient-to-br from-primary-50 to-secondary-50 border-2 border-primary-200 shadow-md">
           <CardBody className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">

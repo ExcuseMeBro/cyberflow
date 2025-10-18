@@ -75,7 +75,7 @@ export default function WalletPage() {
               <p className="text-4xl font-bold text-white mb-1">
                 {mockWalletData.balance.toLocaleString()}
               </p>
-              <p className="text-white/80 text-sm">CBDS Tokens</p>
+              <p className="text-white/80 text-sm">CG Coin</p>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <Button
@@ -101,7 +101,7 @@ export default function WalletPage() {
               <div>
                 <p className="text-sm text-gray-600 mb-1">Child Account Balance</p>
                 <p className="text-2xl font-bold text-purple-600">
-                  {mockWalletData.childBalance.toLocaleString()} CBDS
+                  {mockWalletData.childBalance.toLocaleString()} CG
                 </p>
               </div>
               <Button
@@ -178,7 +178,7 @@ export default function WalletPage() {
                     }`}>
                       {transaction.amount > 0 ? '+' : ''}{transaction.amount.toLocaleString()}
                     </p>
-                    <p className="text-xs text-gray-400">CBDS</p>
+                    <p className="text-xs text-gray-400">CG</p>
                   </div>
                 </div>
               ))}

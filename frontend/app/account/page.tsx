@@ -17,10 +17,20 @@ import {
   Edit,
   Tv,
   DollarSign,
+  Coins,
+  Clock,
 } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 import PageHeader from '@/components/PageHeader';
 import { useAuthStore } from '@/store/authStore';
+
+// Mock gamer stats
+const mockGamerStats = {
+  balance: 15000,
+  todayPlayTime: 3.5,
+  dailyLimit: 4,
+  remainingTime: 0.5,
+};
 
 export default function AccountPage() {
   const router = useRouter();
@@ -230,6 +240,47 @@ export default function AccountPage() {
           </CardBody>
         </Card>
       </div>
+
+      {/* Gamer Stats - Only for regular users */}
+      {userType !== 'parent' && (
+        <div className="mx-4 mb-4">
+          <div className="grid grid-cols-2 gap-3">
+            {/* Balance Card */}
+            <Card className="shadow-md">
+              <CardBody className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center">
+                    <Coins className="w-4 h-4 text-yellow-600" />
+                  </div>
+                  <span className="text-xs text-gray-600">Balance</span>
+                </div>
+                <p className="text-xl font-bold text-yellow-600 mb-1">
+                  {mockGamerStats.balance.toLocaleString()}
+                </p>
+                <p className="text-xs text-gray-500">CG Coin</p>
+              </CardBody>
+            </Card>
+
+            {/* Remaining Time Card */}
+            <Card className="shadow-md">
+              <CardBody className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                    <Clock className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <span className="text-xs text-gray-600">Today</span>
+                </div>
+                <p className="text-xl font-bold text-blue-600 mb-1">
+                  {mockGamerStats.remainingTime}h left
+                </p>
+                <p className="text-xs text-gray-500">
+                  {mockGamerStats.todayPlayTime}h / {mockGamerStats.dailyLimit}h used
+                </p>
+              </CardBody>
+            </Card>
+          </div>
+        </div>
+      )}
 
       {/* Menu Items */}
       <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
