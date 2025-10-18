@@ -1,19 +1,33 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, MapPin, ScanLine, Trophy, User } from 'lucide-react';
+import { Home, MapPin, ScanLine, Trophy, User, Shield, Bell, Settings, Clock, BarChart3 } from 'lucide-react';
+import { useAuthStore } from '@/store/authStore';
 
 export default function BottomNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const { userType } = useAuthStore();
 
-  const navItems = [
+  // Different navigation for parent users
+  const parentNavItems = [
+    { icon: Home, label: 'Home', href: '/home', isCenter: false },
+    { icon: Bell, label: 'Alerts', href: '/notifications', isCenter: false },
+    { icon: Shield, label: 'Control', href: '/parent-control', isCenter: true },
+    { icon: BarChart3, label: 'Stats', href: '/parent-stats', isCenter: false },
+    { icon: User, label: 'Profile', href: '/account', isCenter: false },
+  ];
+
+  // Regular user navigation
+  const userNavItems = [
     { icon: Home, label: 'Home', href: '/home', isCenter: false },
     { icon: MapPin, label: 'Map', href: '/map', isCenter: false },
     { icon: ScanLine, label: 'Scan', href: '/scan', isCenter: true },
     { icon: Trophy, label: 'Competitions', href: '/competitions', isCenter: false },
     { icon: User, label: 'Profile', href: '/account', isCenter: false },
   ];
+
+  const navItems = userType === 'parent' ? parentNavItems : userNavItems;
 
   if (pathname === '/auth/login' || pathname === '/desktop-blocked') {
     return null;

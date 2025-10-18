@@ -24,14 +24,86 @@ import { useAuthStore } from '@/store/authStore';
 
 export default function AccountPage() {
   const router = useRouter();
-  const { user, logout } = useAuthStore();
+  const { user, userType, logout } = useAuthStore();
 
   const handleLogout = () => {
     logout();
     router.push('/auth/login');
   };
 
-  const menuItems = [
+  // Parent-specific menu items
+  const parentMenuItems = [
+    {
+      icon: User,
+      label: 'Profile Settings',
+      href: '/account/edit',
+      color: 'text-orange-600',
+    },
+    {
+      icon: UserPlus,
+      label: 'Child Accounts',
+      href: '/child-accounts',
+      color: 'text-purple-600',
+    },
+    {
+      icon: User,
+      label: 'Parental Controls',
+      href: '/parent-control',
+      color: 'text-blue-600',
+    },
+    {
+      icon: Bell,
+      label: 'Notifications',
+      href: '/notifications',
+      color: 'text-red-600',
+    },
+    {
+      icon: CreditCard,
+      label: 'Payment Methods',
+      href: '/payment-methods',
+      color: 'text-green-600',
+    },
+    {
+      icon: DollarSign,
+      label: 'Wallet & Balance',
+      href: '/wallet',
+      color: 'text-yellow-600',
+    },
+    {
+      icon: Globe,
+      label: 'Language',
+      value: 'English (US)',
+      href: '/language',
+      color: 'text-teal-600',
+    },
+    {
+      icon: Moon,
+      label: 'Dark Mode',
+      href: '/dark-mode',
+      color: 'text-gray-600',
+    },
+    {
+      icon: HelpCircle,
+      label: 'Help Center',
+      href: '/help',
+      color: 'text-pink-600',
+    },
+    {
+      icon: FileText,
+      label: 'Terms of Service',
+      href: '/terms',
+      color: 'text-gray-600',
+    },
+    {
+      icon: BookOpen,
+      label: 'Privacy Policy',
+      href: '/privacy',
+      color: 'text-indigo-600',
+    },
+  ];
+
+  // Regular user menu items
+  const userMenuItems = [
     {
       icon: Tv,
       label: 'My Channel',
@@ -113,11 +185,13 @@ export default function AccountPage() {
     },
   ];
 
+  const menuItems = userType === 'parent' ? parentMenuItems : userMenuItems;
+
   return (
     <div className="min-h-screen bg-gradient-soft pb-24 animate-fade-in">
       {/* Header */}
       <PageHeader
-        title="Profile"
+        title={userType === 'parent' ? 'Parent Account' : 'Profile'}
         rightContent={
           <button
             onClick={() => router.push('/account/edit')}

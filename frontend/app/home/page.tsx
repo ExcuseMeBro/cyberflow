@@ -7,14 +7,22 @@ import CategoryCard from '@/components/CategoryCard';
 import ChannelCard from '@/components/ChannelCard';
 import BottomNav from '@/components/BottomNav';
 import PageHeader from '@/components/PageHeader';
+import ParentDashboard from '@/components/ParentDashboard';
 import { mockStreams, mockCategories, mockChannels } from '@/lib/mockData';
+import { useAuthStore } from '@/store/authStore';
 import Link from 'next/link';
 
 export default function Home() {
+  const { userType } = useAuthStore();
   const recommendedStreams = mockStreams.slice(0, 4);
   const continueWatching = mockStreams.slice(4, 8);
   const followedCategories = mockCategories.slice(0, 4);
   const followedChannels = mockChannels.filter(c => c.isFollowing).slice(0, 6);
+
+  // Show parent dashboard if user is parent
+  if (userType === 'parent') {
+    return <ParentDashboard />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-soft pb-24 animate-fade-in">
@@ -35,13 +43,6 @@ export default function Home() {
               className="smooth-transition hover:bg-primary-100"
             >
               <Bell className="w-5 h-5" />
-            </Button>
-            <Button
-              size="sm"
-              startContent={<Plus className="w-4 h-4" />}
-              className="btn-gradient text-white font-semibold"
-            >
-              Create
             </Button>
           </>
         }
