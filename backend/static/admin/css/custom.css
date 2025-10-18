@@ -1,0 +1,16 @@
+/* CyberFlow Admin Custom Styles */
+
+:root {
+    --primary: #8b5cf6;
+    --primary-dark: #7c3aed;
+    --primary-light: #a78bfa;
+}
+
+/* Custom styling for admin */
+.dashboard-card {
+    @apply bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow;
+}
+
+.stat-card {
+    @apply bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-lg p-6;
+}
