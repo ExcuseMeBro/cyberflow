@@ -19,6 +19,13 @@ import {
   DollarSign,
   Coins,
   Clock,
+  Crown,
+  Trophy,
+  Zap,
+  Target,
+  Award,
+  TrendingUp,
+  Gamepad2,
 } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 import PageHeader from '@/components/PageHeader';
@@ -30,6 +37,14 @@ const mockGamerStats = {
   todayPlayTime: 3.5,
   dailyLimit: 4,
   remainingTime: 0.5,
+  level: 24,
+  rank: 'Diamond',
+  totalPlaytime: 156, // hours
+  winRate: 68,
+  achievements: 42,
+  totalGames: 234,
+  favoriteGame: 'CS:GO',
+  currentStreak: 7, // days
 };
 
 export default function AccountPage() {
@@ -60,6 +75,12 @@ export default function AccountPage() {
       label: 'Parental Controls',
       href: '/parent-control',
       color: 'text-blue-600',
+    },
+    {
+      icon: Crown,
+      label: 'Gaming Packages',
+      href: '/subscriptions',
+      color: 'text-yellow-600',
     },
     {
       icon: Bell,
@@ -115,16 +136,10 @@ export default function AccountPage() {
   // Regular user menu items
   const userMenuItems = [
     {
-      icon: Tv,
-      label: 'My Channel',
-      href: `/channel/${user?.id}`,
-      color: 'text-purple-600',
-    },
-    {
-      icon: DollarSign,
-      label: 'Subscriptions',
+      icon: Crown,
+      label: 'Gaming Packages',
       href: '/subscriptions',
-      color: 'text-green-600',
+      color: 'text-yellow-600',
     },
     {
       icon: CreditCard,
@@ -189,7 +204,7 @@ export default function AccountPage() {
     },
     {
       icon: FileText,
-      label: 'About Streamo',
+      label: 'About',
       href: '/about',
       color: 'text-purple-600',
     },
@@ -214,27 +229,57 @@ export default function AccountPage() {
 
       {/* Profile Section */}
       <div className="mx-4 mt-4 mb-4">
-        <Card className="shadow-lg animate-slide-up">
-          <CardBody className="p-6">
-            <div className="flex items-center gap-4">
+        <Card className="shadow-lg animate-slide-up overflow-hidden">
+          {/* Gaming Banner - Only for gamers */}
+          {userType !== 'parent' && (
+            <div className="h-20 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 relative">
+              <div className="absolute inset-0 bg-black/20" />
+              <div className="absolute top-2 right-2 bg-black/50 backdrop-blur-sm rounded-lg px-3 py-1.5 flex items-center gap-2">
+                <Crown className="w-4 h-4 text-yellow-400" />
+                <span className="text-white text-sm font-bold">{mockGamerStats.rank}</span>
+              </div>
+            </div>
+          )}
+
+          <CardBody className={userType !== 'parent' ? 'p-6 -mt-10' : 'p-6'}>
+            <div className="flex items-start gap-4">
               <div className="relative flex-shrink-0">
                 <Avatar
                   src={user?.avatar || 'https://i.pravatar.cc/150?img=1'}
-                  className="w-20 h-20 border-4 border-primary-200"
+                  className={`${userType !== 'parent' ? 'w-24 h-24 border-4 border-white shadow-xl' : 'w-20 h-20 border-4 border-primary-200'}`}
                 />
-                <div className="absolute bottom-0 right-0 w-5 h-5 bg-green-500 rounded-full border-3 border-white" />
+                {userType !== 'parent' && (
+                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                    Level {mockGamerStats.level}
+                  </div>
+                )}
+                <div className="absolute top-0 right-0 w-5 h-5 bg-green-500 rounded-full border-3 border-white" />
               </div>
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-0 mt-2">
                 <h2 className="text-xl font-bold text-gray-800 truncate">
                   {user?.displayName || 'Andrew Aimsley'}
                 </h2>
                 <p className="text-sm text-gray-500 truncate">
                   @{user?.username || 'AndrewAimsley'}
                 </p>
-                <div className="inline-flex items-center gap-1 bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 text-xs px-2.5 py-1 rounded-full mt-2 font-semibold">
-                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
-                  Active
-                </div>
+                {userType !== 'parent' && (
+                  <div className="flex items-center gap-2 mt-2 flex-wrap">
+                    <div className="inline-flex items-center gap-1 bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 text-xs px-2.5 py-1 rounded-full font-semibold">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                      Online
+                    </div>
+                    <div className="inline-flex items-center gap-1 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 text-xs px-2.5 py-1 rounded-full font-semibold">
+                      <Gamepad2 className="w-3 h-3" />
+                      {mockGamerStats.favoriteGame}
+                    </div>
+                  </div>
+                )}
+                {userType === 'parent' && (
+                  <div className="inline-flex items-center gap-1 bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 text-xs px-2.5 py-1 rounded-full mt-2 font-semibold">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                    Active
+                  </div>
+                )}
               </div>
             </div>
           </CardBody>
@@ -243,7 +288,7 @@ export default function AccountPage() {
 
       {/* Gamer Stats - Only for regular users */}
       {userType !== 'parent' && (
-        <div className="mx-4 mb-4">
+        <div className="mx-4 mb-4 space-y-3">
           <div className="grid grid-cols-2 gap-3">
             {/* Balance Card */}
             <Card className="shadow-md">
@@ -275,6 +320,45 @@ export default function AccountPage() {
                 </p>
                 <p className="text-xs text-gray-500">
                   {mockGamerStats.todayPlayTime}h / {mockGamerStats.dailyLimit}h used
+                </p>
+              </CardBody>
+            </Card>
+          </div>
+
+          {/* Gaming Stats Row 2 */}
+          <div className="grid grid-cols-2 gap-3">
+            {/* Win Rate Card */}
+            <Card className="shadow-md">
+              <CardBody className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                    <Trophy className="w-4 h-4 text-green-600" />
+                  </div>
+                  <span className="text-xs text-gray-600">Win Rate</span>
+                </div>
+                <p className="text-xl font-bold text-green-600 mb-1">
+                  {mockGamerStats.winRate}%
+                </p>
+                <p className="text-xs text-gray-500">
+                  {mockGamerStats.totalGames} games played
+                </p>
+              </CardBody>
+            </Card>
+
+            {/* Achievements Card */}
+            <Card className="shadow-md">
+              <CardBody className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
+                    <Award className="w-4 h-4 text-purple-600" />
+                  </div>
+                  <span className="text-xs text-gray-600">Achievements</span>
+                </div>
+                <p className="text-xl font-bold text-purple-600 mb-1">
+                  {mockGamerStats.achievements}
+                </p>
+                <p className="text-xs text-gray-500">
+                  {mockGamerStats.currentStreak} day streak 🔥
                 </p>
               </CardBody>
             </Card>

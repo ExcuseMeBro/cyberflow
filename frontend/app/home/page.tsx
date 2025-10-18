@@ -10,6 +10,7 @@ import ParentDashboard from '@/components/ParentDashboard';
 import { mockStreams, mockCybermahallas } from '@/lib/mockData';
 import { useAuthStore } from '@/store/authStore';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 // Mock gamer data
 const mockGamerData = {
@@ -56,6 +57,7 @@ const mockPartnerClubs = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   const { userType } = useAuthStore();
   const recommendedStreams = mockStreams.slice(0, 4);
   const continueWatching = mockStreams.slice(4, 8);
@@ -83,6 +85,7 @@ export default function Home() {
               variant="light"
               size="sm"
               className="smooth-transition hover:bg-primary-100"
+              onPress={() => router.push('/notifications')}
             >
               <Bell className="w-5 h-5" />
             </Button>
