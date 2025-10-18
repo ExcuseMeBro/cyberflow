@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import Cookies from 'js-cookie';
 
+export type UserType = 'user' | 'parent';
+
 interface User {
   id: number;
   phone: string;
@@ -9,6 +11,7 @@ interface User {
   displayName: string;
   bio: string;
   avatar?: string;
+  userType: UserType;
   links: {
     discord?: string;
     youtube?: string;
@@ -24,7 +27,8 @@ interface AuthState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
-  login: (phone: string, password: string) => Promise<void>;
+  userType: UserType | null;
+  login: (phone: string, password: string, userType: UserType) => Promise<void>;
   logout: () => void;
   updateUser: (user: User) => void;
 }
@@ -35,34 +39,49 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isAuthenticated: false,
+      userType: null,
 
-      login: async (phone: string, password: string) => {
-        // Mock login - replace with actual API call
-        if (phone === '+10000000000' && password === 'guest123') {
-          const mockUser: User = {
-            id: 1,
-            phone: '+10000000000',
-            username: 'AndrewAimsley',
-            displayName: 'AndrewAimsley',
-            bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.',
-            links: {
-              discord: 'https://discord.gg/AndrewAimsley',
-              youtube: 'https://youtube.com/channel/AndrewAimsley',
-              twitter: 'https://twitter.com/AndrewAimsley',
-              instagram: 'https://instagram.com/AndrewAimsley',
+      login: async (phone: string, password: string, userType: UserType) => {
+        try {
+          const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
             },
-          };
-          const mockToken = 'mock-jwt-token-123456';
+            body: JSON.stringify({ phone, password, userType }),
+          });
 
-          Cookies.set('auth_token', mockToken, { expires: 7 });
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.error || 'Login failed');
+          }
+
+          const { user, token } = data;
+
+          // Save token in cookies
+          Cookies.set('auth_token', token, { expires: 7 });
+
+          // Map database user to User interface
+          const mappedUser: User = {
+            id: user.id,
+            phone: user.phone,
+            username: user.username,
+            displayName: user.display_name,
+            bio: user.bio || '',
+            userType: user.user_type,
+            avatar: user.avatar,
+            links: user.links || {},
+          };
 
           set({
-            user: mockUser,
-            token: mockToken,
+            user: mappedUser,
+            token,
             isAuthenticated: true,
+            userType: user.user_type,
           });
-        } else {
-          throw new Error('Invalid credentials');
+        } catch (error: any) {
+          throw new Error(error.message || 'Invalid credentials');
         }
       },
 
@@ -72,6 +91,7 @@ export const useAuthStore = create<AuthState>()(
           user: null,
           token: null,
           isAuthenticated: false,
+          userType: null,
         });
       },
 
