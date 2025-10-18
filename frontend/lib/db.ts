@@ -41,7 +41,57 @@ export function initializeDatabase() {
     CREATE INDEX IF NOT EXISTS idx_user_links_user_id ON user_links(user_id);
   `);
 
+  // Seed test users
+  seedTestUsers();
+
   console.log('Database initialized successfully');
+}
+
+// Seed test users for development
+function seedTestUsers() {
+  // Check if test users already exist
+  const gamerExists = db.prepare('SELECT id FROM users WHERE phone = ?').get('+10000000000');
+  const parentExists = db.prepare('SELECT id FROM users WHERE phone = ?').get('+20000000000');
+
+  // Create test gamer account if it doesn't exist
+  if (!gamerExists) {
+    const gamerPassword = hashPassword('guest123');
+    db.prepare(`
+      INSERT INTO users (user_type, first_name, last_name, phone, date_of_birth, password, username, display_name, bio)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      'user',
+      'Test',
+      'Gamer',
+      '+10000000000',
+      '2000-01-01',
+      gamerPassword,
+      'testgamer',
+      'Test Gamer',
+      'Test gamer account for development'
+    );
+    console.log('Test gamer account created');
+  }
+
+  // Create test parent account if it doesn't exist
+  if (!parentExists) {
+    const parentPassword = hashPassword('parent123');
+    db.prepare(`
+      INSERT INTO users (user_type, first_name, last_name, phone, date_of_birth, password, username, display_name, bio)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      'parent',
+      'Test',
+      'Parent',
+      '+20000000000',
+      '1980-01-01',
+      parentPassword,
+      'testparent',
+      'Test Parent',
+      'Test parent account for development'
+    );
+    console.log('Test parent account created');
+  }
 }
 
 // Initialize the database when this module is imported
